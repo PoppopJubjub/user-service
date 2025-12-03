@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.popjub.common.response.ApiResponse;
 import com.popjub.userservice.application.service.AuthService;
 import com.popjub.userservice.domain.entity.User;
+import com.popjub.userservice.presentation.dto.request.LoginUserRequest;
 import com.popjub.userservice.presentation.dto.request.SignUpStoreManagerRequest;
 import com.popjub.userservice.presentation.dto.request.SignUpUserRequest;
+import com.popjub.userservice.presentation.dto.response.LoginUserResponse;
 import com.popjub.userservice.presentation.dto.response.SignUpUserResponse;
 
 import jakarta.validation.Valid;
@@ -46,5 +48,15 @@ public class AuthController {
 		SignUpUserResponse response = SignUpUserResponse.from(user);
 
 		return ApiResponse.of("팝업관리자로 회원가입이 완료되었습니다.", response);
+	}
+
+	@PostMapping("/login")
+	public ApiResponse<LoginUserResponse> login(
+		@RequestBody LoginUserRequest request
+	) {
+		String accessToken = authService.login(request.toCommand());
+		LoginUserResponse response = LoginUserResponse.of(accessToken);
+
+		return ApiResponse.of("로그인에 성공했습니다.", response);
 	}
 }
