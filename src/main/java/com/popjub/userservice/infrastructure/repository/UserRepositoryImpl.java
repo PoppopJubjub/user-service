@@ -1,5 +1,7 @@
 package com.popjub.userservice.infrastructure.repository;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.popjub.userservice.domain.entity.User;
@@ -26,5 +28,10 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public boolean existsByNickName(String nickName) {
 		return userJpaRepository.existsByNickName(nickName);
+	}
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return userJpaRepository.findByEmail(email);
 	}
 }
