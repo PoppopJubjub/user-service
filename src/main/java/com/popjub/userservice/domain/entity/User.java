@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "users", schema = "users_schema")
+@Table(name = "p_user", schema = "users_schema")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -88,11 +88,6 @@ public class User extends BaseEntity {
 	 */
 	public static User createUserWithRole(String email, String password, String nickName, String userName, String phone,
 		UserRole role) {
-
-		if (role == UserRole.ADMIN) {
-			throw new IllegalArgumentException("ADMIN 역할은 직접 생성할 수 없습니다.");
-		}
-
 		return User.builder()
 			.email(email)
 			.password(password)
