@@ -11,9 +11,9 @@ import com.popjub.userservice.domain.entity.User;
 import com.popjub.userservice.presentation.dto.request.LoginUserRequest;
 import com.popjub.userservice.presentation.dto.request.SignUpStoreManagerRequest;
 import com.popjub.userservice.presentation.dto.request.SignUpUserRequest;
-import com.popjub.userservice.presentation.dto.response.LoginUserResponse;
 import com.popjub.userservice.presentation.dto.response.SignUpUserResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +23,9 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final AuthService authService;
+
+	private static final String AUTHORIZATION_HEADER = "Authorization";
+	private static final String BEARER_PREFIX = "Bearer ";
 
 	/**
 	 * 일반 회원가입용
@@ -51,12 +54,15 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ApiResponse<LoginUserResponse> login(
-		@RequestBody LoginUserRequest request
+	public ApiResponse<Void> login(
+		@RequestBody LoginUserRequest request,
+		HttpServletResponse response
 	) {
 		String accessToken = authService.login(request.toCommand());
-		LoginUserResponse response = LoginUserResponse.of(accessToken);
+		response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + accessToken);
 
-		return ApiResponse.of("로그인에 성공했습니다.", response);
+		return ApiResponse.<Void>builder()
+			.message("로그인에 성공했습니다.")
+			.build();
 	}
 }
