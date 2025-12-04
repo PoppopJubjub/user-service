@@ -44,6 +44,12 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	private UserRole role;
 
+	@Column(name = "slack_url")
+	private String slackUrl;
+
+	@Column(name = "discord_url")
+	private String discordUrl;
+
 	@Builder(access = AccessLevel.PRIVATE)
 	private User(String email, String password, String nickName, String userName, String phone, UserRole role) {
 		this.email = email;
@@ -96,5 +102,10 @@ public class User extends BaseEntity {
 			.phone(phone)
 			.role(role)
 			.build();
+	}
+
+	public void updateNotificationUrls(String slackUrl, String discordUrl) {
+		this.slackUrl = slackUrl;
+		this.discordUrl = discordUrl;
 	}
 }
