@@ -39,5 +39,4 @@ public class JwtTokenProvider {
 			.signWith(getSigningKey())
 			.compact();
 	}
-
 }
