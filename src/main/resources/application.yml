@@ -45,3 +45,7 @@ feign:
       hub-service:
         connectTimeout: 3000
         readTimeout: 5000
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
