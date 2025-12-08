@@ -26,13 +26,13 @@ public class JwtTokenProvider {
 		);
 	}
 
-	public String generateAccessToken(Long userId, String email, List<String> roles) {
+	public String generateAccessToken(Long userId, String userName, List<String> roles) {
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + jwtProperties.getExpiration());
 
 		return Jwts.builder()
 			.subject(userId.toString())
-			.claim("email", email)
+			.claim("userName", userName)
 			.claim("roles", roles)
 			.issuedAt(now)
 			.expiration(expiryDate)
