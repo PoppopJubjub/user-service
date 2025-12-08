@@ -40,9 +40,9 @@ public class AuthService {
 
 		User savedUser = userRepository.save(user);
 
-		log.info("회원가입 완료(USER) - userId: {}, email: {}, role: {}",
+		log.info("회원가입 완료(USER) - userId: {}, userName: {}, role: {}",
 			savedUser.getUserId(),
-			savedUser.getEmail(),
+			savedUser.getUserName(),
 			savedUser.getRole()
 		);
 		return savedUser;
@@ -59,9 +59,9 @@ public class AuthService {
 
 		User savedUser = userRepository.save(user);
 
-		log.info("회원가입 완료(STORE_MANAGER) - userId: {}, email: {}, role: {}",
+		log.info("회원가입 완료(STORE_MANAGER) - userId: {}, userName: {}, role: {}",
 			savedUser.getUserId(),
-			savedUser.getEmail(),
+			savedUser.getUserName(),
 			savedUser.getRole()
 		);
 		return savedUser;
@@ -79,11 +79,11 @@ public class AuthService {
 		List<String> roles = List.of(user.getRole().name());
 		String accessToken = jwtTokenProvider.generateAccessToken(
 			user.getUserId(),
-			user.getEmail(),
+			user.getUserName(),
 			roles
 		);
 
-		log.info("로그인 성공 - userId: {}, email: {}", user.getUserId(), user.getEmail());
+		log.info("로그인 성공 - userId: {}, userName: {}", user.getUserId(), user.getUserName());
 
 		return accessToken;
 	}
