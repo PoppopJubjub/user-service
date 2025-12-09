@@ -45,7 +45,7 @@ public class UserController {
 	@GetMapping("/me")
 	@RoleCheck({UserRole.USER, UserRole.STORE_MANAGER, UserRole.ADMIN})
 	public ApiResponse<SearchUserDetailResponse> getMyProfile(@CurrentUser Long userId) {
-		SearchUserDetailResult result = userService.getUserById(userId);
+		SearchUserDetailResult result = userService.getMyProfile(userId);
 		SearchUserDetailResponse response = SearchUserDetailResponse.from(result);
 		return ApiResponse.of("내 정보 조회에 성공했습니다.", response);
 	}

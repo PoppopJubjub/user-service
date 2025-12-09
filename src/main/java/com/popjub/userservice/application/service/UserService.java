@@ -35,7 +35,7 @@ public class UserService {
 		);
 	}
 
-	public SearchUserDetailResult getUserById(Long userId) {
+	public SearchUserDetailResult getMyProfile(Long userId) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
 
