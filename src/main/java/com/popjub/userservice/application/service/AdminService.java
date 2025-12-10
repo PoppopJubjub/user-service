@@ -1,10 +1,14 @@
 package com.popjub.userservice.application.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.popjub.userservice.application.dto.command.CreateUserCommand;
+import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
+import com.popjub.userservice.application.dto.result.SearchUserResult;
 import com.popjub.userservice.domain.entity.User;
 import com.popjub.userservice.domain.entity.UserRole;
 import com.popjub.userservice.domain.repository.UserRepository;
@@ -51,5 +55,18 @@ public class AdminService {
 		);
 
 		return savedUser;
+	}
+
+	public SearchUserDetailResult getUserDetailByAdmin(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
+
+		return SearchUserDetailResult.from(user);
+	}
+
+	public Page<SearchUserResult> getAllUsers(Pageable pageable) {
+		Page<User> userPage = userRepository.findAll(pageable);
+
+		return userPage.map(SearchUserResult::from);
 	}
 }

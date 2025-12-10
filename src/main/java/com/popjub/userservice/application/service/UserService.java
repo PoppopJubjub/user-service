@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.popjub.userservice.application.dto.command.UpdateNotificationUrlsCommand;
+import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.domain.entity.User;
 import com.popjub.userservice.domain.repository.UserRepository;
 import com.popjub.userservice.exception.UserCustomException;
@@ -32,5 +33,14 @@ public class UserService {
 			command.slackUrl() != null ? "설정됨" : "미설정",
 			command.discordUrl() != null ? "설정됨" : "미설정"
 		);
+	}
+
+	public SearchUserDetailResult getMyProfile(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
+
+		log.info("내 정보 조회 성공 - userId: {}", userId);
+
+		return SearchUserDetailResult.from(user);
 	}
 }

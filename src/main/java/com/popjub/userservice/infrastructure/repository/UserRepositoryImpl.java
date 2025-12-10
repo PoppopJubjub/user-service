@@ -2,6 +2,8 @@ package com.popjub.userservice.infrastructure.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.popjub.userservice.domain.entity.User;
@@ -38,5 +40,10 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public Optional<User> findById(Long userId) {
 		return userJpaRepository.findById(userId);
+	}
+
+	@Override
+	public Page<User> findAll(Pageable pageable) {
+		return userJpaRepository.findAll(pageable);
 	}
 }
