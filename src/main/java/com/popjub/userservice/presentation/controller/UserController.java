@@ -1,5 +1,7 @@
 package com.popjub.userservice.presentation.controller;
 
+import static com.popjub.common.enums.UserRole.*;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.popjub.common.annotation.CurrentUser;
 import com.popjub.common.annotation.RoleCheck;
 import com.popjub.common.enums.SuccessCode;
-import com.popjub.common.enums.UserRole;
 import com.popjub.common.response.ApiResponse;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.service.UserService;
@@ -43,7 +44,7 @@ public class UserController {
 	}
 
 	@GetMapping("/me")
-	@RoleCheck({UserRole.USER, UserRole.STORE_MANAGER, UserRole.ADMIN})
+	@RoleCheck({USER, STORE_MANAGER, ADMIN})
 	public ApiResponse<SearchUserDetailResponse> getMyProfile(@CurrentUser Long userId) {
 		SearchUserDetailResult result = userService.getMyProfile(userId);
 		SearchUserDetailResponse response = SearchUserDetailResponse.from(result);
