@@ -1,14 +1,20 @@
 package com.popjub.userservice.presentation.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.popjub.common.annotation.RoleCheck;
+import com.popjub.common.enums.UserRole;
 import com.popjub.common.response.ApiResponse;
+import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.service.AdminService;
 import com.popjub.userservice.domain.entity.User;
 import com.popjub.userservice.presentation.dto.request.CreateUserRequest;
+import com.popjub.userservice.presentation.dto.response.SearchUserDetailResponse;
 import com.popjub.userservice.presentation.dto.response.SignUpUserResponse;
 
 import jakarta.validation.Valid;
@@ -32,5 +38,16 @@ public class AdminController {
 		SignUpUserResponse response = SignUpUserResponse.from(user);
 
 		return ApiResponse.of("회원이 생성되었습니다.", response);
+	}
+
+	@RoleCheck(UserRole.ADMIN)
+	@GetMapping("/users/{userId}")
+	public ApiResponse<SearchUserDetailResponse> getUserDetailByAdmin(
+		@PathVariable Long userId
+	) {
+		SearchUserDetailResult result = adminService.getUserDetailByAdmin(userId);
+		SearchUserDetailResponse response = SearchUserDetailResponse.from(result);
+
+		return ApiResponse.of("특정사용자의 정보 조회에 성공했습니다.", response);
 	}
 }
