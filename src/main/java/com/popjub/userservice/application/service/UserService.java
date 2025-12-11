@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.popjub.userservice.application.dto.command.UpdateNotificationUrlsCommand;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
+import com.popjub.userservice.application.dto.result.UserInfoResult;
 import com.popjub.userservice.domain.entity.User;
 import com.popjub.userservice.domain.repository.UserRepository;
 import com.popjub.userservice.exception.UserCustomException;
@@ -42,5 +43,12 @@ public class UserService {
 		log.info("내 정보 조회 성공 - userId: {}", userId);
 
 		return SearchUserDetailResult.from(user);
+	}
+
+	public UserInfoResult getUserWebhookUrls(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
+
+		return UserInfoResult.from(user);
 	}
 }

@@ -36,7 +36,7 @@ dependencies {
     // database
     runtimeOnly 'org.postgresql:postgresql'
     // common
-    implementation 'com.github.PoppopJubjub:common:1.1.3'
+    implementation 'com.github.PoppopJubjub:common:1.1.4'
     // Valid
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // Security
@@ -45,6 +45,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    // Feign Client
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 }
 
 dependencyManagement {
