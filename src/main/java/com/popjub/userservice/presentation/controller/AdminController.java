@@ -52,7 +52,7 @@ public class AdminController {
 		@PathVariable Long userId
 	) {
 		SearchUserDetailResult result = adminService.getUserDetailByAdmin(userId);
-		SearchUserDetailResponse response = SearchUserDetailResponse.from(result);
+		SearchUserDetailResponse response = SearchUserDetailResponse.fromResult(result);
 
 		return ApiResponse.of("특정사용자의 정보 조회에 성공했습니다.", response);
 	}
@@ -67,7 +67,7 @@ public class AdminController {
 		) Pageable pageable
 	) {
 		Page<SearchUserResult> resultPage = adminService.getAllUsers(pageable);
-		Page<SearchUserResponse> responsePage = resultPage.map(SearchUserResponse::from);
+		Page<SearchUserResponse> responsePage = resultPage.map(SearchUserResponse::fromResult);
 		PageResponse<SearchUserResponse> pageResponse = PageResponse.from(responsePage);
 
 		return ApiResponse.of("유저 전체조회에 성공했습니다", pageResponse);

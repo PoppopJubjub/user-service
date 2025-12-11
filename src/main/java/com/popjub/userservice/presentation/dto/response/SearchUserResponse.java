@@ -15,7 +15,7 @@ public record SearchUserResponse(
 	LocalDateTime createdAt
 ) {
 
-	public static SearchUserResponse from(SearchUserResult searchUserResult) {
+	public static SearchUserResponse fromResult(SearchUserResult searchUserResult) {
 		return SearchUserResponse.builder()
 			.userId(searchUserResult.userId())
 			.email(searchUserResult.email())

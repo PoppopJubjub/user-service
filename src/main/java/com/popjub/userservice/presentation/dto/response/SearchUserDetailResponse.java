@@ -12,7 +12,7 @@ public record SearchUserDetailResponse(
 	String slackUrl,
 	String discordUrl
 ) {
-	public static SearchUserDetailResponse from(SearchUserDetailResult result) {
+	public static SearchUserDetailResponse fromResult(SearchUserDetailResult result) {
 		return new SearchUserDetailResponse(
 			result.userId(),
 			result.email(),
