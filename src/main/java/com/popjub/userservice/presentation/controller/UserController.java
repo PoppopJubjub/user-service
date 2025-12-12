@@ -27,14 +27,11 @@ public class UserController {
 	private final UserService userService;
 
 	@PutMapping("/me/notification-urls")
+	@RoleCheck({USER, STORE_MANAGER, ADMIN})
 	public ApiResponse<Void> updateUserNotificationUrls(
-		@RequestBody UpdateNotificationUrlsRequest request
+		@RequestBody UpdateNotificationUrlsRequest request,
+		@CurrentUser Long userId
 	) {
-		/**
-		 * TODO: @CurrentUser 로 바꿀 예정 - 임시 userId = 1
-		 */
-		Long userId = 1L;
-
 		userService.updateNotificationUrls(request.toCommand(userId));
 
 		return ApiResponse.<Void>builder()
