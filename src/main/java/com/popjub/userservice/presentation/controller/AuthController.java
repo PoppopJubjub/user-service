@@ -9,6 +9,7 @@ import com.popjub.common.response.ApiResponse;
 import com.popjub.userservice.application.service.AuthService;
 import com.popjub.userservice.domain.entity.User;
 import com.popjub.userservice.presentation.dto.request.LoginUserRequest;
+import com.popjub.userservice.presentation.dto.request.SignUpAdminRequest;
 import com.popjub.userservice.presentation.dto.request.SignUpStoreManagerRequest;
 import com.popjub.userservice.presentation.dto.request.SignUpUserRequest;
 import com.popjub.userservice.presentation.dto.response.SignUpUserResponse;
@@ -51,6 +52,16 @@ public class AuthController {
 		SignUpUserResponse response = SignUpUserResponse.from(user);
 
 		return ApiResponse.of("팝업관리자로 회원가입이 완료되었습니다.", response);
+	}
+
+	@PostMapping("/sign-up/admin")
+	public ApiResponse<SignUpUserResponse> signUpAdmin(
+		@Valid @RequestBody SignUpAdminRequest request
+	) {
+		User user = authService.signUpAdmin(request.toCommand());
+		SignUpUserResponse response = SignUpUserResponse.from(user);
+
+		return ApiResponse.of("어드민으로 회원가입이 완료되었습니다.", response);
 	}
 
 	@PostMapping("/login")

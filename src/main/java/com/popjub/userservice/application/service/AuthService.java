@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.popjub.userservice.application.dto.command.LoginUserCommand;
+import com.popjub.userservice.application.dto.command.SignUpAdminCommand;
 import com.popjub.userservice.application.dto.command.SignUpStoreManagerCommand;
 import com.popjub.userservice.application.dto.command.SignUpUserCommand;
 import com.popjub.userservice.domain.entity.User;
@@ -35,9 +36,7 @@ public class AuthService {
 		validateNickNameDuplication(command.nickName());
 
 		String encodedPassword = passwordEncoder.encode(command.password());
-
 		User user = command.toEntity(encodedPassword);
-
 		User savedUser = userRepository.save(user);
 
 		log.info("회원가입 완료(USER) - userId: {}, userName: {}, role: {}",
@@ -45,6 +44,7 @@ public class AuthService {
 			savedUser.getUserName(),
 			savedUser.getRole()
 		);
+
 		return savedUser;
 	}
 
@@ -54,9 +54,7 @@ public class AuthService {
 		validateNickNameDuplication(command.nickName());
 
 		String encodedPassword = passwordEncoder.encode(command.password());
-
 		User user = command.toEntity(encodedPassword);
-
 		User savedUser = userRepository.save(user);
 
 		log.info("회원가입 완료(STORE_MANAGER) - userId: {}, userName: {}, role: {}",
@@ -64,6 +62,25 @@ public class AuthService {
 			savedUser.getUserName(),
 			savedUser.getRole()
 		);
+
+		return savedUser;
+	}
+
+	@Transactional
+	public User signUpAdmin(SignUpAdminCommand command) {
+		validateEmailDuplication(command.email());
+		validateNickNameDuplication(command.nickName());
+
+		String encodedPassword = passwordEncoder.encode(command.password());
+		User user = command.toEntity(encodedPassword);
+		User savedUser = userRepository.save(user);
+
+		log.info("회원가입 완료(ADMIN) - userId: {}, userName: {}, role: {}",
+			savedUser.getUserId(),
+			savedUser.getUserName(),
+			savedUser.getRole()
+		);
+
 		return savedUser;
 	}
 

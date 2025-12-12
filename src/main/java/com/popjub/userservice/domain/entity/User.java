@@ -90,6 +90,21 @@ public class User extends BaseEntity {
 	}
 
 	/**
+	 * 어드민 생성(ADMIN)
+	 */
+	public static User createAdmin(String email, String password, String nickName, String userName,
+		String phone) {
+		return User.builder()
+			.email(email)
+			.password(password)
+			.nickName(nickName)
+			.userName(userName)
+			.phone(phone)
+			.role(UserRole.ADMIN)
+			.build();
+	}
+
+	/**
 	 * ADMIN 전용 유저 생성
 	 */
 	public static User createUserWithRole(String email, String password, String nickName, String userName, String phone,

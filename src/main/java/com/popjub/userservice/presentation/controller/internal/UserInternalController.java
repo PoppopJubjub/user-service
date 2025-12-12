@@ -20,8 +20,8 @@ public class UserInternalController {
 
 	private final UserService userService;
 
-	@GetMapping("/{userId}/urls")
-	public UserInfoResponse getUserWebhook(
+	@GetMapping("/{userId}")
+	public UserInfoResponse getUserInfo(
 		@PathVariable Long userId
 	) {
 		log.info("[내부 API] 사용자 Webhook URL 조회 - userId: {}", userId);
