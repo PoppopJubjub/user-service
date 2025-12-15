@@ -1,4 +1,4 @@
-package com.popjub.userservice.config;
+package com.popjub.userservice.infrastructure.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
