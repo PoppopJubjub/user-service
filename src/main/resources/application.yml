@@ -36,15 +36,39 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 feign:
+  circuitbreaker:
+    enabled: true
   client:
     config:
       default:
         connectTimeout: 5000
         readTimeout: 10000
         loggerLevel: BASIC
-      hub-service:
+      store-service:
         connectTimeout: 3000
         readTimeout: 5000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      store-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10              # 최근 10개 요청 기준
+        minimumNumberOfCalls: 5            # 최소 5번 호출 후 평가
+        failureRateThreshold: 50           # 실패율 50% 이상이면 OPEN
+        waitDurationInOpenState: 10s       # OPEN 상태 10초 유지
+        permittedNumberOfCallsInHalfOpenState: 3  # HALF_OPEN 일 때 3번 시도
+        slowCallRateThreshold: 100         # 느린 호출 비율 임계값
+        slowCallDurationThreshold: 3s      # 3초 이상이면 느린 호출로 간주
+
+  retry:
+    instances:
+      store-service:
+        maxAttempts: 3                     # 최대 3번 재시도
+        waitDuration: 1s                   # 재시도 간격 1초
+        retryExceptions:
+          - java.net.ConnectException
+          - java.net.SocketTimeoutException
 
 jwt:
   secret: ${JWT_SECRET}
