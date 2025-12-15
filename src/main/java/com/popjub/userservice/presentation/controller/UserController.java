@@ -3,6 +3,7 @@ package com.popjub.userservice.presentation.controller;
 import static com.popjub.common.enums.UserRole.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +15,13 @@ import com.popjub.common.enums.SuccessCode;
 import com.popjub.common.response.ApiResponse;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.service.UserService;
+import com.popjub.userservice.domain.entity.LikeStore;
+import com.popjub.userservice.presentation.dto.request.CreateLikeStoreRequest;
 import com.popjub.userservice.presentation.dto.request.UpdateNotificationUrlsRequest;
+import com.popjub.userservice.presentation.dto.response.LikeStoreResponse;
 import com.popjub.userservice.presentation.dto.response.SearchUserDetailResponse;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -47,5 +52,15 @@ public class UserController {
 		SearchUserDetailResponse response = SearchUserDetailResponse.fromResult(result);
 
 		return ApiResponse.of("내 정보 조회에 성공했습니다.", response);
+	}
+
+	@PostMapping("/me/like-stores")
+	public ApiResponse<LikeStoreResponse> createLikeStore(
+		@Valid @RequestBody CreateLikeStoreRequest request,
+		@CurrentUser Long userId
+	) {
+		LikeStore likeStore = userService.createLikeStore(request.toCommand(userId));
+		LikeStoreResponse response = LikeStoreResponse.from(likeStore);
+		return ApiResponse.of("관심 팝업 등록에 성공했습니다.", response);
 	}
 }
