@@ -20,6 +20,7 @@ public enum UserErrorCode implements BaseErrorCode {
 	DUPLICATE_EMAIL("이미 사용 중인 이메일입니다.", HttpStatus.CONFLICT),
 	DUPLICATE_NICKNAME("이미 사용 중인 닉네임입니다.", HttpStatus.CONFLICT),
 	CANNOT_CREATE_ADMIN("ADMIN 역할은 생성할 수 없습니다.", HttpStatus.BAD_REQUEST),
+	CANNOT_CHANGE_TO_ADMIN("ADMIN 역할로 변경할 수 없습니다.", HttpStatus.BAD_REQUEST),
 	NOT_FOUND_USER("존재하지 않은 사용자입니다.", HttpStatus.NOT_FOUND),
 	/**
 	 * 관심 팝업
