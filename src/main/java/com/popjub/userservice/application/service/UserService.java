@@ -48,7 +48,7 @@ public class UserService {
 		User user = userRepository.findById(command.userId())
 			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
 
-		validateNickNameDuplicate(command.nickName(), user.getNickName());
+		validateNickNameDuplicate(command.nickName(), user);
 
 		user.updateMyProfile(command.nickName(), command.userName(), command.phone());
 
@@ -93,13 +93,11 @@ public class UserService {
 		return UserInfoResult.from(user);
 	}
 
-	private void validateNickNameDuplicate(String newNickName, String currentNickName) {
-		if (newNickName == null || newNickName.equals(currentNickName)) {
-			return;
-		}
-
-		if (userRepository.existsByNickName(newNickName)) {
-			throw new UserCustomException(UserErrorCode.DUPLICATE_NICKNAME);
+	private void validateNickNameDuplicate(String newNickName, User user) {
+		if (user.isDifferentNickName(newNickName)) {
+			if (userRepository.existsByNickName(newNickName)) {
+				throw new UserCustomException(UserErrorCode.DUPLICATE_NICKNAME);
+			}
 		}
 	}
 
