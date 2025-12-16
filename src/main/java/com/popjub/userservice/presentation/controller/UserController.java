@@ -18,6 +18,7 @@ import com.popjub.userservice.application.service.UserService;
 import com.popjub.userservice.domain.entity.LikeStore;
 import com.popjub.userservice.presentation.dto.request.CreateLikeStoreRequest;
 import com.popjub.userservice.presentation.dto.request.UpdateNotificationUrlsRequest;
+import com.popjub.userservice.presentation.dto.request.UpdateUserRequest;
 import com.popjub.userservice.presentation.dto.response.LikeStoreResponse;
 import com.popjub.userservice.presentation.dto.response.SearchUserDetailResponse;
 
@@ -41,6 +42,19 @@ public class UserController {
 
 		return ApiResponse.<Void>builder()
 			.message("알림받을 디스코드/슬랙 url 등록에 성공했습니다.")
+			.code(SuccessCode.OK)
+			.build();
+	}
+
+	@PutMapping("/me")
+	public ApiResponse<Void> updateMyProfile(
+		@Valid @RequestBody UpdateUserRequest request,
+		@CurrentUser Long userId
+	) {
+		userService.updateMyProfile(request.toCommand(userId));
+
+		return ApiResponse.<Void>builder()
+			.message("내 정보 수정에 성공했습니다.")
 			.code(SuccessCode.OK)
 			.build();
 	}
