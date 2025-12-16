@@ -125,6 +125,21 @@ public class User extends BaseEntity {
 	}
 
 	public void updateMyProfile(String nickName, String userName, String phone) {
+		updateBasicInfo(nickName, userName, phone);
+	}
+
+	public void updateByAdmin(String nickName, String userName, String phone, UserRole role) {
+		updateBasicInfo(nickName, userName, phone);
+		if (role != null) {
+			this.role = role;
+		}
+	}
+
+	public boolean isDifferentNickName(String newNickName) {
+		return newNickName != null && !newNickName.equals(this.nickName);
+	}
+
+	private void updateBasicInfo(String nickName, String userName, String phone) {
 		if (nickName != null && !nickName.isBlank()) {
 			this.nickName = nickName;
 		}
