@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.popjub.userservice.application.dto.command.CreateLikeStoreCommand;
 import com.popjub.userservice.application.dto.command.UpdateNotificationUrlsCommand;
+import com.popjub.userservice.application.dto.command.UpdateUserCommand;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.dto.result.UserInfoResult;
 import com.popjub.userservice.application.port.StoreServicePort;
@@ -42,6 +43,18 @@ public class UserService {
 		);
 	}
 
+	@Transactional
+	public void updateMyProfile(UpdateUserCommand command) {
+		User user = userRepository.findById(command.userId())
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
+
+		validateNickNameDuplicate(command.nickName(), user.getNickName());
+
+		user.updateMyProfile(command.nickName(), command.userName(), command.phone());
+
+		log.info("내 정보 수정 성공 - userId: {}", command.userId());
+	}
+
 	public SearchUserDetailResult getMyProfile(Long userId) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
@@ -49,13 +62,6 @@ public class UserService {
 		log.info("내 정보 조회 성공 - userId: {}", userId);
 
 		return SearchUserDetailResult.from(user);
-	}
-
-	public UserInfoResult getUserWebhookUrls(Long userId) {
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
-
-		return UserInfoResult.from(user);
 	}
 
 	@Transactional
@@ -78,6 +84,23 @@ public class UserService {
 		log.info("관심 팝업 등록 - userId: {}, storeId: {}", command.userId(), command.storeId());
 
 		return saved;
+	}
+
+	public UserInfoResult getUserWebhookUrls(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
+
+		return UserInfoResult.from(user);
+	}
+
+	private void validateNickNameDuplicate(String newNickName, String currentNickName) {
+		if (newNickName == null || newNickName.equals(currentNickName)) {
+			return;
+		}
+
+		if (userRepository.existsByNickName(newNickName)) {
+			throw new UserCustomException(UserErrorCode.DUPLICATE_NICKNAME);
+		}
 	}
 
 	private boolean isStoreNotFound(CreateLikeStoreCommand command) {
