@@ -9,11 +9,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.popjub.common.annotation.RoleCheck;
+import com.popjub.common.enums.SuccessCode;
 import com.popjub.common.response.ApiResponse;
 import com.popjub.common.response.PageResponse;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
@@ -21,6 +23,7 @@ import com.popjub.userservice.application.dto.result.SearchUserResult;
 import com.popjub.userservice.application.service.AdminService;
 import com.popjub.userservice.domain.entity.User;
 import com.popjub.userservice.presentation.dto.request.CreateUserRequest;
+import com.popjub.userservice.presentation.dto.request.UpdateUserByAdminRequest;
 import com.popjub.userservice.presentation.dto.response.SearchUserDetailResponse;
 import com.popjub.userservice.presentation.dto.response.SearchUserResponse;
 import com.popjub.userservice.presentation.dto.response.SignUpUserResponse;
@@ -71,5 +74,19 @@ public class AdminController {
 		PageResponse<SearchUserResponse> pageResponse = PageResponse.from(responsePage);
 
 		return ApiResponse.of("유저 전체조회에 성공했습니다", pageResponse);
+	}
+
+	@RoleCheck(ADMIN)
+	@PutMapping("/users/{userId}")
+	public ApiResponse<Void> updateUserByAdmin(
+		@PathVariable Long userId,
+		@Valid @RequestBody UpdateUserByAdminRequest request
+	) {
+		adminService.updateUserByAdmin(request.toCommand(userId));
+
+		return ApiResponse.<Void>builder()
+			.message("유저 정보 수정에 성공했습니다.")
+			.code(SuccessCode.OK)
+			.build();
 	}
 }
