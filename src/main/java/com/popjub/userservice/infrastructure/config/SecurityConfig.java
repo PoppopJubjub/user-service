@@ -1,4 +1,4 @@
-package com.popjub.userservice.config;
+package com.popjub.userservice.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

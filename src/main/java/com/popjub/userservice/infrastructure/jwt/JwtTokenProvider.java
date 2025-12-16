@@ -8,7 +8,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
-import com.popjub.userservice.config.JwtProperties;
+import com.popjub.userservice.infrastructure.config.JwtProperties;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
