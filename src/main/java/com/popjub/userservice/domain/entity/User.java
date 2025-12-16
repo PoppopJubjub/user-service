@@ -123,4 +123,16 @@ public class User extends BaseEntity {
 		this.slackUrl = slackUrl;
 		this.discordUrl = discordUrl;
 	}
+
+	public void updateMyProfile(String nickName, String userName, String phone) {
+		if (nickName != null && !nickName.isBlank()) {
+			this.nickName = nickName;
+		}
+		if (userName != null && !userName.isBlank()) {
+			this.userName = userName;
+		}
+		if (phone != null && !phone.isBlank()) {
+			this.phone = phone;
+		}
+	}
 }
