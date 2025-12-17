@@ -16,6 +16,7 @@ import com.popjub.common.response.ApiResponse;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.service.UserService;
 import com.popjub.userservice.domain.entity.LikeStore;
+import com.popjub.userservice.presentation.dto.request.ChangePasswordRequest;
 import com.popjub.userservice.presentation.dto.request.CreateLikeStoreRequest;
 import com.popjub.userservice.presentation.dto.request.UpdateNotificationUrlsRequest;
 import com.popjub.userservice.presentation.dto.request.UpdateUserRequest;
@@ -75,6 +76,20 @@ public class UserController {
 	) {
 		LikeStore likeStore = userService.createLikeStore(request.toCommand(userId));
 		LikeStoreResponse response = LikeStoreResponse.from(likeStore);
+
 		return ApiResponse.of("관심 팝업 등록에 성공했습니다.", response);
+	}
+
+	@PutMapping("/me/password")
+	public ApiResponse<Void> changePassword(
+		@Valid @RequestBody ChangePasswordRequest request,
+		@CurrentUser Long userId
+	) {
+		userService.changePassword(request.toCommand(userId));
+
+		return ApiResponse.<Void>builder()
+			.message("비밀번호 변경에 성공했습니다.")
+			.code(SuccessCode.OK)
+			.build();
 	}
 }
