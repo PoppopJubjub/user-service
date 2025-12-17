@@ -139,6 +139,10 @@ public class User extends BaseEntity {
 		return newNickName != null && !newNickName.equals(this.nickName);
 	}
 
+	public void changePassword(String newEncodedPassword) {
+		this.password = newEncodedPassword;
+	}
+
 	private void updateBasicInfo(String nickName, String userName, String phone) {
 		if (nickName != null && !nickName.isBlank()) {
 			this.nickName = nickName;
