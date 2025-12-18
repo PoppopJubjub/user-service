@@ -123,4 +123,35 @@ public class User extends BaseEntity {
 		this.slackUrl = slackUrl;
 		this.discordUrl = discordUrl;
 	}
+
+	public void updateMyProfile(String nickName, String userName, String phone) {
+		updateBasicInfo(nickName, userName, phone);
+	}
+
+	public void updateByAdmin(String nickName, String userName, String phone, UserRole role) {
+		updateBasicInfo(nickName, userName, phone);
+		if (role != null) {
+			this.role = role;
+		}
+	}
+
+	public boolean isDifferentNickName(String newNickName) {
+		return newNickName != null && !newNickName.equals(this.nickName);
+	}
+
+	public void changePassword(String newEncodedPassword) {
+		this.password = newEncodedPassword;
+	}
+
+	private void updateBasicInfo(String nickName, String userName, String phone) {
+		if (nickName != null && !nickName.isBlank()) {
+			this.nickName = nickName;
+		}
+		if (userName != null && !userName.isBlank()) {
+			this.userName = userName;
+		}
+		if (phone != null && !phone.isBlank()) {
+			this.phone = phone;
+		}
+	}
 }

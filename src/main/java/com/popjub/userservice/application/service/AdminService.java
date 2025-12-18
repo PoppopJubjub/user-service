@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.popjub.userservice.application.dto.command.CreateUserCommand;
+import com.popjub.userservice.application.dto.command.UpdateUserByAdminCommand;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.dto.result.SearchUserResult;
 import com.popjub.userservice.domain.entity.User;
@@ -68,5 +69,31 @@ public class AdminService {
 		Page<User> userPage = userRepository.findAll(pageable);
 
 		return userPage.map(SearchUserResult::from);
+	}
+
+	@Transactional
+	public void updateUserByAdmin(UpdateUserByAdminCommand command) {
+		User user = userRepository.findById(command.userId())
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_USER));
+
+		validateAdminRoleChange(command.role());
+		validateNickNameDuplicate(command.nickName(), user);
+
+		user.updateByAdmin(command.nickName(), command.userName(), command.phone(), command.role());
+
+	}
+
+	private void validateAdminRoleChange(UserRole newRole) {
+		if (newRole == UserRole.ADMIN) {
+			throw new UserCustomException(UserErrorCode.CANNOT_CHANGE_TO_ADMIN);
+		}
+	}
+
+	private void validateNickNameDuplicate(String newNickName, User user) {
+		if (user.isDifferentNickName(newNickName)) {
+			if (userRepository.existsByNickName(newNickName)) {
+				throw new UserCustomException(UserErrorCode.DUPLICATE_NICKNAME);
+			}
+		}
 	}
 }
