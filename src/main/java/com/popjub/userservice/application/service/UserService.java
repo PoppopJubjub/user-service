@@ -1,5 +1,7 @@
 package com.popjub.userservice.application.service;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -119,7 +121,18 @@ public class UserService {
 
 		return likeStores.map(SearchLikeStoreResult::from);
 	}
-	
+
+	@Transactional
+	public void deleteLikeStore(UUID likeStoreId, Long userId) {
+		LikeStore likeStore = likeStoreRepository
+			.findByLikeStoreIdAndUserIdAndDeletedAtIsNull(likeStoreId, userId)
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_LIKE_STORE));
+
+		likeStore.softDelete(userId);
+
+		log.info("관심 팝업 삭제 - likeStoreId: {}, userId: {}", likeStoreId, userId);
+	}
+
 	/**  private Method 구분선  */
 	private void validateNickNameDuplicate(String newNickName, User user) {
 		if (user.isDifferentNickName(newNickName)) {

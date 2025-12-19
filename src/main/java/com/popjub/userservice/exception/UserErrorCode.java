@@ -31,7 +31,9 @@ public enum UserErrorCode implements BaseErrorCode {
 	 * 관심 팝업
 	 */
 	NOT_FOUND_STORE("존재하지 않는 팝업입니다.", HttpStatus.NOT_FOUND),
+	NOT_FOUND_LIKE_STORE("관심 팝업을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 	ALREADY_LIKED_STORE("이미 관심 등록된 팝업입니다.", HttpStatus.CONFLICT),
+
 	/**
 	 * Validation
 	 */
