@@ -36,7 +36,7 @@ dependencies {
     // database
     runtimeOnly 'org.postgresql:postgresql'
     // common
-    implementation 'com.github.PoppopJubjub:common:1.1.4'
+    implementation 'com.github.PoppopJubjub:common:1.1.6'
     // Valid
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // Security

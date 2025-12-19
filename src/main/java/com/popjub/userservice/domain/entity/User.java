@@ -119,6 +119,10 @@ public class User extends BaseEntity {
 			.build();
 	}
 
+	public void applyCreatedBy(Long userId) {
+		this.createdBy = userId;
+	}
+
 	public void updateNotificationUrls(String slackUrl, String discordUrl) {
 		this.slackUrl = slackUrl;
 		this.discordUrl = discordUrl;

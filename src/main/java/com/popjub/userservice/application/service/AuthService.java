@@ -38,6 +38,7 @@ public class AuthService {
 		String encodedPassword = passwordEncoder.encode(command.password());
 		User user = command.toEntity(encodedPassword);
 		User savedUser = userRepository.save(user);
+		savedUser.applyCreatedBy(savedUser.getUserId());
 
 		log.info("회원가입 완료(USER) - userId: {}, userName: {}, role: {}",
 			savedUser.getUserId(),
@@ -56,6 +57,7 @@ public class AuthService {
 		String encodedPassword = passwordEncoder.encode(command.password());
 		User user = command.toEntity(encodedPassword);
 		User savedUser = userRepository.save(user);
+		savedUser.applyCreatedBy(savedUser.getUserId());
 
 		log.info("회원가입 완료(STORE_MANAGER) - userId: {}, userName: {}, role: {}",
 			savedUser.getUserId(),
@@ -74,6 +76,7 @@ public class AuthService {
 		String encodedPassword = passwordEncoder.encode(command.password());
 		User user = command.toEntity(encodedPassword);
 		User savedUser = userRepository.save(user);
+		savedUser.applyCreatedBy(savedUser.getUserId());
 
 		log.info("회원가입 완료(ADMIN) - userId: {}, userName: {}, role: {}",
 			savedUser.getUserId(),
@@ -96,11 +99,10 @@ public class AuthService {
 		List<String> roles = List.of(user.getRole().name());
 		String accessToken = jwtTokenProvider.generateAccessToken(
 			user.getUserId(),
-			user.getUserName(),
 			roles
 		);
 
-		log.info("로그인 성공 - userId: {}, userName: {}", user.getUserId(), user.getUserName());
+		log.info("로그인 성공 - userId: {}", user.getUserId());
 
 		return accessToken;
 	}
