@@ -14,4 +14,6 @@ public interface LikeStoreJpaRepository extends JpaRepository<LikeStore, UUID> {
 	Optional<LikeStore> findByUserIdAndStoreIdAndDeletedAtIsNull(Long userId, UUID storeId);
 
 	Page<LikeStore> findByUserIdAndDeletedAtIsNull(Long userId, Pageable pageable);
+
+	Optional<LikeStore> findByLikeStoreIdAndUserIdAndDeletedAtIsNull(UUID likeStoreId, Long userId);
 }

@@ -15,4 +15,6 @@ public interface LikeStoreRepository {
 	LikeStore save(LikeStore likeStore);
 
 	Page<LikeStore> findByUserIdAndDeletedAtIsNull(Long userId, Pageable pageable);
+
+	Optional<LikeStore> findByLikeStoreIdAndUserIdAndDeletedAtIsNull(UUID likeStoreId, Long userId);
 }

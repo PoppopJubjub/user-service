@@ -32,4 +32,9 @@ public class LikeStoreRepositoryImpl implements LikeStoreRepository {
 	public Page<LikeStore> findByUserIdAndDeletedAtIsNull(Long userId, Pageable pageable) {
 		return likeStoreJpaRepository.findByUserIdAndDeletedAtIsNull(userId, pageable);
 	}
+
+	@Override
+	public Optional<LikeStore> findByLikeStoreIdAndUserIdAndDeletedAtIsNull(UUID likeStoreId, Long userId) {
+		return likeStoreJpaRepository.findByLikeStoreIdAndUserIdAndDeletedAtIsNull(likeStoreId, userId);
+	}
 }
