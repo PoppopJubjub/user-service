@@ -1,5 +1,9 @@
 package com.popjub.userservice.application.service;
 
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +12,7 @@ import com.popjub.userservice.application.dto.command.ChangePasswordCommand;
 import com.popjub.userservice.application.dto.command.CreateLikeStoreCommand;
 import com.popjub.userservice.application.dto.command.UpdateNotificationUrlsCommand;
 import com.popjub.userservice.application.dto.command.UpdateUserCommand;
+import com.popjub.userservice.application.dto.result.SearchLikeStoreResult;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.dto.result.UserInfoResult;
 import com.popjub.userservice.application.port.StoreServicePort;
@@ -111,6 +116,24 @@ public class UserService {
 		log.info("비밀번호 변경 성공 - userId: {}", command.userId());
 	}
 
+	public Page<SearchLikeStoreResult> getLikeStores(Long userId, Pageable pageable) {
+		Page<LikeStore> likeStores = likeStoreRepository.findByUserIdAndDeletedAtIsNull(userId, pageable);
+
+		return likeStores.map(SearchLikeStoreResult::from);
+	}
+
+	@Transactional
+	public void deleteLikeStore(UUID likeStoreId, Long userId) {
+		LikeStore likeStore = likeStoreRepository
+			.findByLikeStoreIdAndUserIdAndDeletedAtIsNull(likeStoreId, userId)
+			.orElseThrow(() -> new UserCustomException(UserErrorCode.NOT_FOUND_LIKE_STORE));
+
+		likeStore.softDelete(userId);
+
+		log.info("관심 팝업 삭제 - likeStoreId: {}, userId: {}", likeStoreId, userId);
+	}
+
+	/**  private Method 구분선  */
 	private void validateNickNameDuplicate(String newNickName, User user) {
 		if (user.isDifferentNickName(newNickName)) {
 			if (userRepository.existsByNickName(newNickName)) {

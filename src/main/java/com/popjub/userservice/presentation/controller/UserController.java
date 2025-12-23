@@ -2,7 +2,15 @@ package com.popjub.userservice.presentation.controller;
 
 import static com.popjub.common.enums.UserRole.*;
 
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +21,8 @@ import com.popjub.common.annotation.CurrentUser;
 import com.popjub.common.annotation.RoleCheck;
 import com.popjub.common.enums.SuccessCode;
 import com.popjub.common.response.ApiResponse;
+import com.popjub.common.response.PageResponse;
+import com.popjub.userservice.application.dto.result.SearchLikeStoreResult;
 import com.popjub.userservice.application.dto.result.SearchUserDetailResult;
 import com.popjub.userservice.application.service.UserService;
 import com.popjub.userservice.domain.entity.LikeStore;
@@ -21,6 +31,7 @@ import com.popjub.userservice.presentation.dto.request.CreateLikeStoreRequest;
 import com.popjub.userservice.presentation.dto.request.UpdateNotificationUrlsRequest;
 import com.popjub.userservice.presentation.dto.request.UpdateUserRequest;
 import com.popjub.userservice.presentation.dto.response.LikeStoreResponse;
+import com.popjub.userservice.presentation.dto.response.SearchLikeStoreResponse;
 import com.popjub.userservice.presentation.dto.response.SearchUserDetailResponse;
 
 import jakarta.validation.Valid;
@@ -89,6 +100,35 @@ public class UserController {
 
 		return ApiResponse.<Void>builder()
 			.message("비밀번호 변경에 성공했습니다.")
+			.code(SuccessCode.OK)
+			.build();
+	}
+
+	@GetMapping("/me/like-stores")
+	public ApiResponse<PageResponse<SearchLikeStoreResponse>> getLikeStores(
+		@CurrentUser Long userId,
+		@PageableDefault(
+			size = 10,
+			sort = "createdAt",
+			direction = Sort.Direction.DESC
+		) Pageable pageable
+	) {
+		Page<SearchLikeStoreResult> resultPage = userService.getLikeStores(userId, pageable);
+		Page<SearchLikeStoreResponse> responsePage = resultPage.map(SearchLikeStoreResponse::fromResult);
+		PageResponse<SearchLikeStoreResponse> pageResponse = PageResponse.from(responsePage);
+
+		return ApiResponse.of("관심 팝업 목록 조회가 완료되었습니다.", pageResponse);
+	}
+
+	@DeleteMapping("/me/like-stores/{likeStoreId}")
+	public ApiResponse<Void> deleteLikeStore(
+		@PathVariable UUID likeStoreId,
+		@CurrentUser Long userId
+	) {
+		userService.deleteLikeStore(likeStoreId, userId);
+
+		return ApiResponse.<Void>builder()
+			.message("관심 팝업 삭제에 성공했습니다.")
 			.code(SuccessCode.OK)
 			.build();
 	}
